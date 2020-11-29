@@ -23,7 +23,7 @@ namespace Sbornik_Bot
             if (_authorizer.Authorize(userId)) //User access check (admins only allowed)
             {
                 string text = message.Text;
-                if (String.IsNullOrEmpty(text)) //Empty string cannot be a command
+                if (String.IsNullOrEmpty(text) || (text[0] != '!')) //Empty string cannot be a command
                 {
                     var reply = PlainMessage?.Invoke(message); //if event is not null calls an event
                     if (!(reply is null))
@@ -33,13 +33,10 @@ namespace Sbornik_Bot
                 }
                 else
                 {
-                    if (text[0] == '!') //ToDo: command symbol
-                    {
-                        var reply = CommandMessage?.Invoke(message); //if event is not null calls an event
-                        if (!(reply is null))
-                        {
-                            SendReplyMessage?.Invoke(reply); //if event is not null calls an event
-                        }
+                    var reply = CommandMessage?.Invoke(message); //if event is not null calls an event
+                    if (!(reply is null))
+                    { 
+                        SendReplyMessage?.Invoke(reply); //if event is not null calls an event
                     }
                 }
             }

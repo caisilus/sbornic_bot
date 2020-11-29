@@ -38,14 +38,9 @@ namespace Sbornik_Bot
             return messages;
         }
 
-        public void SendMessage(Message message)
+        public void SendMessage(MessagesSendParams sendParams)
         {
-            _vkApi.Messages.Send(new MessagesSendParams
-            {
-                PeerId = message.PeerId,
-                Message = message.Text,
-                RandomId = new DateTime().Millisecond
-            });
+            _vkApi.Messages.Send(sendParams);
         }
     }
 }
