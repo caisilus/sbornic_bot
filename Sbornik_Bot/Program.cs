@@ -14,7 +14,10 @@ namespace Sbornik_Bot
             while (true)
             {
                 IEnumerable<Message> new_messages = botApi.NewMessages();
-                
+                foreach (Message message in new_messages)
+                {
+                    
+                }
             }
         }
     }
