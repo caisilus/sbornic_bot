@@ -12,15 +12,16 @@ namespace Sbornik_Bot
         {
             using (StreamReader reader = new StreamReader(path, Encoding.Default))
             {
+                //assert: file contains 2 lines, no check this
                 string line = reader.ReadLine();
                 token = line;
                 line = reader.ReadLine();
                 groupId = ulong.Parse(line);
             }
         }
-        public IBotApi GetApi()
+        public IMessageApi GetApi()
         {
-            return new VkBotApi(token, groupId);
+            return new VkMessageApi(token, groupId);
         }
     }
 }

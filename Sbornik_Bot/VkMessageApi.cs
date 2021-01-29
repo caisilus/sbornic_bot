@@ -8,14 +8,14 @@ using VkNet.Model.RequestParams;
 
 namespace Sbornik_Bot
 {
-    public class VkBotApi: IBotApi
+    public class VkMessageApi: IMessageApi
     {
         private VkApi _vkApi;
         private static string server; //for vk api (is used for every query)
         private static string key; //for vk api (is used for every query)
         private string ts; //for vk api (is used for every query), changes for every query 
         private int wait;
-        public VkBotApi(string token, ulong groupId)
+        public VkMessageApi(string token, ulong groupId)
         {
             _vkApi = new VkApi();
             _vkApi.Authorize(new ApiAuthParams{AccessToken = token});
@@ -32,7 +32,7 @@ namespace Sbornik_Bot
                 Key = key, Server = server, Ts = ts, Wait = wait
             });
             ts = events_response.Ts;
-            IEnumerable<Message> messages = events_response.Updates
+            var messages = events_response.Updates
                 .Where(u => u.Type == GroupUpdateType.MessageNew)
                 .Select(u => u.MessageNew.Message);
             return messages;

@@ -5,7 +5,7 @@ using VkNet.Model.RequestParams;
 
 namespace Sbornik_Bot
 {
-    public interface IBotApi
+    public interface IMessageApi
     {
         IEnumerable<Message> NewMessages();
         void SendMessage(MessagesSendParams sendParams);

@@ -2,6 +2,6 @@
 {
     public interface IApiInicializer
     {
-        IBotApi GetApi();
+        IMessageApi GetApi();
     }
 }
