@@ -42,5 +42,18 @@ namespace Sbornik_Bot
         {
             _vkApi.Messages.Send(sendParams);
         }
+        
+        /// <summary>
+        /// used as default MessageSendParams Constructor when only Text is valuable
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static MessagesSendParams DefaultTextMessage(Message message, string text) => new MessagesSendParams()
+        {
+            PeerId = message.PeerId,
+            Message = text,
+            RandomId = new Random().Next()
+        };
     }
 }

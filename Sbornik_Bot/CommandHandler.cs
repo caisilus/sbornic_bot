@@ -17,6 +17,7 @@ namespace Sbornik_Bot
             help["/help"] = "Отображает список команд";
             help["/add_tags"] = "Добавляет слова(разделённые пробелами) из сообщения с этой командой как тэги";
             help["/tags_list"] = "Отображает список существующих тегов";
+            help["/set_tags"] = "Устанавливает теги для поста";
         }
         public bool Condition(Message message)
         {
