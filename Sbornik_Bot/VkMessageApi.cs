@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using VkNet;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
+using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 
 namespace Sbornik_Bot
@@ -43,17 +45,5 @@ namespace Sbornik_Bot
             _vkApi.Messages.Send(sendParams);
         }
         
-        /// <summary>
-        /// used as default MessageSendParams Constructor when only Text is valuable
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static MessagesSendParams DefaultTextMessage(Message message, string text) => new MessagesSendParams()
-        {
-            PeerId = message.PeerId,
-            Message = text,
-            RandomId = new Random().Next()
-        };
     }
 }

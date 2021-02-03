@@ -19,12 +19,17 @@ namespace Sbornik_Bot
             _attachments = attachments;
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             WallPostData wallPostObj = obj as WallPostData;
             if (wallPostObj is null)
                 return false;
             return wallPostObj._attachments.Zip(this._attachments).All(pair => pair.First == pair.Second);
+        }
+
+        public override int GetHashCode()
+        {
+            return _text.GetHashCode() ^ _date.GetHashCode() ^ _attachments.GetHashCode();
         }
 
         public static bool operator==(WallPostData wpd1, WallPostData wpd2)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VkNet;
 using VkNet.Model;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
@@ -30,33 +31,32 @@ namespace Sbornik_Bot
             if (message?.Attachments != null)
             {
                 var attachments = message.Attachments;
-                var wallPosts = attachments.Where(attachment => attachment.Instance.GetType() == typeof(Wall))
-                    .Select(attachment => (Wall) attachment.Instance);
+                var wallPosts = IMessageApi.GetAttachmentsPosts(attachments);
                 bool postsAdded = false;
-                foreach (var wallPost in wallPosts)
+                foreach (WallPostData wallPostData in wallPosts)
                 {
-                    WallPostData wallPostData = new WallPostData(wallPost.Text, wallPost.Date, wallPost.Attachments);
-                    bool status = _tagsService.AddPost(wallPostData, null);
-                    if (status)
+                    bool status = _tagsService.AddPost(wallPostData, null); /* using tags service. status = true if 
+                        post if added, and false if an arror has occured. */
+                    if (status) //no errors, post added (to database)
                     {
                         postsAdded = true;
-                        return VkMessageApi.DefaultTextMessage(message, "пост добавлен!");
+                        return IMessageApi.DefaultTextMessage(message, "пост добавлен!");
                     }
-                    else
-                        return VkMessageApi.DefaultTextMessage(message, "Ошибка: пост не был добавлен");
+                    else //error has occured
+                        return IMessageApi.DefaultTextMessage(message, "Ошибка: пост не был добавлен");
                 }
 
-                if (!postsAdded)
+                if (!postsAdded) //in case foreach had zero iterations
                 {
-                    return VkMessageApi.DefaultTextMessage(message, "Введите /help для помощи");
+                    return IMessageApi.DefaultTextMessage(message, "Введите /help для помощи");
                 }
             }
             else
             {
-                return VkMessageApi.DefaultTextMessage(message, "Введите /help для помощи");
+                return IMessageApi.DefaultTextMessage(message, "Введите /help для помощи");
             }
 
-            throw new ApplicationException();
+            throw new ApplicationException(); //never happens, added for compiler's calm
         }
     }
 }
