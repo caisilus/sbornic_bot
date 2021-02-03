@@ -13,16 +13,23 @@ namespace Sbornik_Bot
             IMessageApi botApi = inicializer.GetApi();
             
             IAuthorizer authorizer = new DefaultAuthorizer();
+            ITagsService tagsService = new DictTagsService();
             
             while (true)
             {
                 IEnumerable<Message> new_messages = botApi.NewMessages();
-                IMessageConditionHandler comandConditionHandler = new CommandHandler();
+                IMessageConditionHandler comandConditionHandler = new CommandHandler(tagsService);
+                IMessageConditionHandler emptyTextHandler = new EmptyTextHandler(tagsService);
                 foreach (Message message in new_messages)
                 {
                     if (comandConditionHandler.Condition(message))
                     {
                         botApi.SendMessage(comandConditionHandler.Reply(message));
+                    }
+
+                    if (emptyTextHandler.Condition(message))
+                    {
+                        botApi.SendMessage(emptyTextHandler.Reply(message));
                     }
                 }
             }

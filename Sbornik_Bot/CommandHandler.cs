@@ -11,9 +11,11 @@ namespace Sbornik_Bot
     public class CommandHandler: IMessageConditionHandler
     {
         private Dictionary<string, string> help = new Dictionary<string, string>();
+        private ITagsService _tagsService;
 
-        public CommandHandler()
+        public CommandHandler(ITagsService tagsService)
         {
+            _tagsService = tagsService;
             help["/help"] = "Отображает список команд";
             help["/add_tags"] = "Добавляет слова(разделённые пробелами) из сообщения с этой командой как тэги";
             help["/tags_list"] = "Отображает список существующих тегов";
@@ -43,30 +45,38 @@ namespace Sbornik_Bot
                         break;
                     }
 
-                    case "/add_tags": //placeholder. Some database shit should happen here
+                    case "/add_tags":
                     {
-                        StringBuilder sb = new StringBuilder("Вы добавили тэги: ");
-
-                        foreach (string word in words.Skip(1)) //building a reply string of tags to be added
+                        string[] tags = words.Skip(1).ToArray();
+                        if (_tagsService.AddTags(tags)) //using tag service to add tags
                         {
-                            sb.Append($"\"{word}\" ");
+                            StringBuilder sb = new StringBuilder("Вы добавили тэги: ");
+                            foreach (string tag in tags) //building a reply string of tags to be added
+                            {
+                                sb.Append($"\"{tag}\" ");
+                            }
+                            replyText = sb.ToString();   
                         }
-
-                        replyText = sb.ToString();
+                        else
+                        {
+                            replyText = "Error!";
+                        }
                         break;
                     }
                     case "/tags_list":
-                        replyText = "<empty list>"; //Some database shit should happen here
+                    {
+                        var tags = _tagsService.GetTagsList();
+                        if (tags == null || tags.Length == 0)
+                            replyText = "<empty list>";
+                        else
+                        {
+                            replyText = String.Concat(tags);
+                        } 
                         break;
-
+                    }
                 }
 
-                return new MessagesSendParams()
-                {
-                    PeerId = message.PeerId,
-                    Message = replyText,
-                    RandomId = new Random().Next()
-                };
+                return IMessageApi.DefaultTextMessage(message, replyText);
             }
             else 
                 return null;
