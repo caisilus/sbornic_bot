@@ -32,9 +32,34 @@ namespace Sbornik_Bot
             return true;
         }
 
+        public bool AddTag(string tag)
+        {
+            return _tags.Add(tag);
+        }
+
         public bool AddPost(WallPostData wallPostData, string[] tags)
         {
             _idsToWallPostData[_index] = wallPostData;
+            _idsToTags[_index] = new List<string>();
+            if (tags != null)
+            {
+                foreach (var tag in tags)
+                {
+                    if (_tags.Contains(tag))
+                    {
+                        _idsToTags[_index].Add(tag);
+                    }
+                }   
+            }
+            _index++;
+            return true;
+        }
+        
+        public bool AddPost(WallPostData wallPostData, string[] tags, out int id)
+        {
+            _idsToWallPostData[_index] = wallPostData;
+            _idsToTags[_index] = new List<string>();
+            id = _index; //id of added post
             if (tags != null)
             {
                 foreach (var tag in tags)

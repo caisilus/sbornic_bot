@@ -34,12 +34,16 @@ namespace Sbornik_Bot
         /// </summary>
         /// <param name="attachments"></param>
         /// <returns></returns>
-        public static IEnumerable<WallPostData> GetAttachmentsPosts(ReadOnlyCollection<Attachment> attachments)
+        public static WallPostData GetAttachmentsPosts(ReadOnlyCollection<Attachment> attachments)
         {
             var wallPosts = attachments.Where(attachment => attachment.Instance.GetType() == typeof(Wall))
                 .Select(attachment => (Wall) attachment.Instance) //IEnumerable of Wall posts among Attachments
                 .Select(wallPost => new WallPostData(wallPost.Text, wallPost.Date, wallPost.Attachments)); //IEnumerable<WallPostData>
-            return wallPosts;
+            var wallPost = wallPosts.First(); //InvalidOperationException = wallPost - пустая коллекция.
+                                              //ArgumentNullException = wallpost - null ?
+            if (wallPosts.Count() > 1)
+                throw new ApplicationException("More than 1 post in attachments!"); //More than 1 posts in message
+            return wallPost;
         }
     }
 }

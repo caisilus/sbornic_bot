@@ -70,8 +70,63 @@ namespace Sbornik_Bot
                             replyText = "<empty list>";
                         else
                         {
-                            replyText = String.Concat(tags);
+                            replyText = tags.Aggregate((s1, s2) => s1 +" "+ s2);
                         } 
+                        break;
+                    }
+                    case "/set_tags":
+                    {
+                        var attachments = message.Attachments;
+                        if (attachments == null)
+                        {
+                            replyText = "Ошибка: нет прикреплённого поста!";
+                            break;
+                        }
+
+                        WallPostData wallPost;
+                        try
+                        {
+                            wallPost = IMessageApi.GetAttachmentsPosts(attachments); //Getting post from message
+                        }
+                        catch (InvalidOperationException ioe)
+                        {
+                            replyText = "Ошибка: нет прикреплённого поста!";
+                            break;
+                        }
+                        catch (ArgumentNullException ane)
+                        {
+                            replyText = "Ошбика: нет прикреплённого поста!";
+                            break;
+                        }
+                        catch (ApplicationException ae)
+                        {
+                            replyText = "Ошибка: больше 2 постов в сообщении!!!";
+                            break;
+                        }
+
+                        //Building a string
+                        StringBuilder stringBuilder = new StringBuilder();
+                        var tags = words.Skip(1).ToArray();
+                        foreach (var tag in tags)
+                        {
+                            if (_tagsService.AddTag(tag))
+                            {
+                                stringBuilder.Append($"Новый тэг {tag} добавлен.\n");
+                            }
+                        }
+                        if (tags.Length == 0)
+                            tags = null;
+
+                        var status = _tagsService.AddPost(wallPost, tags, out int id); //Adding post and setting tags!
+                        if (status)
+                        {
+                            stringBuilder.Append($"Пост (id: {id}) добавлен.\nТэги установлены.");
+                            replyText = stringBuilder.ToString();
+                        }
+                        else
+                        {
+                            replyText = "Произошла ошибка! Пост или тэги не были добавлены.";
+                        }
                         break;
                     }
                 }
