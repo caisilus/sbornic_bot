@@ -8,23 +8,23 @@ namespace Sbornik_Bot
     {
         static void Main(string[] args)
         {
-            IApiInicializer inicializer = 
+            IApiInicializer initializer = 
                 new ApiFileInicializer(@"C:\C#_pet_projects\Sbornik_Bot\Sbornik_Bot\files\ini.txt");
-            IMessageApi botApi = inicializer.GetApi();
+            IMessageApi botApi = initializer.GetApi();
             
-            IAuthorizer authorizer = new DefaultAuthorizer();
+            //IAuthorizer authorizer = new DefaultAuthorizer(); Add authorization!
             ITagsService tagsService = new DictTagsService();
             
             while (true)
             {
-                IEnumerable<Message> new_messages = botApi.NewMessages();
-                IMessageConditionHandler comandConditionHandler = new CommandHandler(tagsService);
+                IEnumerable<Message> newMessages = botApi.NewMessages();
+                IMessageConditionHandler commandConditionHandler = new CommandHandler(tagsService);
                 IMessageConditionHandler emptyTextHandler = new EmptyTextHandler(tagsService);
-                foreach (Message message in new_messages)
+                foreach (Message message in newMessages)
                 {
-                    if (comandConditionHandler.Condition(message))
+                    if (commandConditionHandler.Condition(message))
                     {
-                        botApi.SendMessage(comandConditionHandler.Reply(message));
+                        botApi.SendMessage(commandConditionHandler.Reply(message));
                     }
 
                     if (emptyTextHandler.Condition(message))

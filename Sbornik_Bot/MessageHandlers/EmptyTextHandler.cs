@@ -32,21 +32,20 @@ namespace Sbornik_Bot
             {
                 var attachments = message.Attachments;
                 var wallPosts = IMessageApi.GetAttachmentsPosts(attachments);
-                bool postsAdded = false;
+                bool postAdded = false;
                 foreach (WallPostData wallPostData in wallPosts)
                 {
-                    bool status = _tagsService.AddPost(wallPostData, null); /* using tags service. status = true if 
+                    postAdded = _tagsService.AddPost(wallPostData, null); /* using tags service. status = true if 
                         post if added, and false if an arror has occured. */
-                    if (status) //no errors, post added (to database)
+                    if (postAdded) //no errors, post added (to database)
                     {
-                        postsAdded = true;
                         return IMessageApi.DefaultTextMessage(message, "пост добавлен!");
                     }
                     else //error has occured
                         return IMessageApi.DefaultTextMessage(message, "Ошибка: пост не был добавлен");
                 }
 
-                if (!postsAdded) //in case foreach had zero iterations
+                if (!postAdded) //in case foreach had zero iterations
                 {
                     return IMessageApi.DefaultTextMessage(message, "Введите /help для помощи");
                 }
