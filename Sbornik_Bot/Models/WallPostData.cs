@@ -19,6 +19,14 @@ namespace Sbornik_Bot
             _attachments = attachments;
         }
 
+        public ReadOnlyCollection<Attachment> Attachments
+        {
+            get
+            {
+                return _attachments;
+            }
+        }
+        
         public override bool Equals(object obj)
         {
             WallPostData wallPostObj = obj as WallPostData;

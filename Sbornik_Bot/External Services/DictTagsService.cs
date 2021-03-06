@@ -59,6 +59,12 @@ namespace Sbornik_Bot
         {
             _idsToWallPostData[_index] = wallPostData;
             _idsToTags[_index] = new List<string>();
+            var photoes = wallPostData.Attachments.Where(att => PhotoModel.IsPhoto(att))
+                .Select(att => new PhotoModel(att));
+            foreach (var photo in photoes)
+            {
+                photo.PrintUri();
+            }
             id = _index; //id of added post
             if (tags != null)
             {

@@ -9,7 +9,7 @@ namespace Sbornik_Bot
         static void Main(string[] args)
         {
             IApiInicializer initializer = 
-                new ApiFileInicializer(@"C:\C#_pet_projects\Sbornik_Bot\Sbornik_Bot\files\ini.txt");
+                new ApiFileInicializer(@"..\..\..\files\ini.txt");
             IMessageApi botApi = initializer.GetApi();
             
             //IAuthorizer authorizer = new DefaultAuthorizer(); Add authorization!

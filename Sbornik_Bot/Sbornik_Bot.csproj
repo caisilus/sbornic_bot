@@ -9,4 +9,13 @@
       <PackageReference Include="VkNet" Version="1.57.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Models\IAttachment.cs" />
+      <Compile Remove="Models\AttachmentModel.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="files\attachments" />
+    </ItemGroup>
+
 </Project>
